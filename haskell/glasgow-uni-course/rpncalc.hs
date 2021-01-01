@@ -1,37 +1,37 @@
-solveRPN :: String -> [Float]  
-solveRPN = foldl fn [] . words  
+evaluateRPN :: String -> [Float]  
+evaluateRPN = foldl eval [] . words  
   where
-    fn xs "e" = exp 1:xs  
-    fn xs "pi" = pi:xs
+    eval xs "e" = exp 1:xs  
+    eval xs "pi" = pi:xs
     
-    fn (x:xs) "!" = product [1..x]:xs
-    fn (x:xs) "abs" = abs x:xs  
-    fn (x:xs) "neg" = negate x:xs  
-    fn (x:xs) "inv" = (1.0 / x):xs  
-    fn (x:xs) "sqrt" = sqrt x:xs  
-    fn (x:xs) "ln" = log x:xs  
-    fn (x:xs) "cos" = cos x:xs  
-    fn (x:xs) "sin" = sin x:xs  
-    fn (x:xs) "tan" = tan x:xs  
+    eval (x:xs) "!" = product [1..x]:xs
+    eval (x:xs) "abs" = abs x:xs  
+    eval (x:xs) "neg" = negate x:xs  
+    eval (x:xs) "inv" = (1.0 / x):xs  
+    eval (x:xs) "sqrt" = sqrt x:xs  
+    eval (x:xs) "ln" = log x:xs  
+    eval (x:xs) "cos" = cos x:xs  
+    eval (x:xs) "sin" = sin x:xs  
+    eval (x:xs) "tan" = tan x:xs  
 
-    fn (y:x:ys) "*" = (x * y):ys  
-    fn (y:x:ys) "+" = (x + y):ys  
-    fn (y:x:ys) "-" = (x - y):ys  
-    fn (y:x:ys) "/" = (x / y):ys  
-    fn (y:x:ys) "^" = (x ** y):ys
-    fn (y:x:ys) ".." = reverse [x..y] ++ ys
+    eval (y:x:ys) "*" = (x * y):ys  
+    eval (y:x:ys) "+" = (x + y):ys  
+    eval (y:x:ys) "-" = (x - y):ys  
+    eval (y:x:ys) "/" = (x / y):ys  
+    eval (y:x:ys) "^" = (x ** y):ys
+    eval (y:x:ys) ".." = reverse [x..y] ++ ys
     
-    fn xs "avg" = [sum xs / fromIntegral (length xs)]
-    fn xs "cnt" = [fromIntegral (length xs)]
-    fn xs "max" = [maximum xs]
-    fn xs "min" = [minimum xs]
-    fn xs "prd" = [product xs]
-    fn xs "sum" = [sum xs]
+    eval xs "avg" = [sum xs / fromIntegral (length xs)]
+    eval xs "cnt" = [fromIntegral (length xs)]
+    eval xs "max" = [maximum xs]
+    eval xs "min" = [minimum xs]
+    eval xs "prd" = [product xs]
+    eval xs "sum" = [sum xs]
 
-    fn xs numberString = read numberString:xs
+    eval xs numberString = read numberString:xs
 
 test :: String -> IO ()
-test expr = putStrLn $ expr ++ " => " ++ show (solveRPN expr)
+test expr = putStrLn $ expr ++ " => " ++ show (evaluateRPN expr)
   
 main :: IO ()
 main = do
