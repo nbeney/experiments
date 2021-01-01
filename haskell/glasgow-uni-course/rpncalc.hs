@@ -1,13 +1,9 @@
 solveRPN :: String -> [Float]  
 solveRPN = foldl fn [] . words  
   where
-    fn (y:x:ys) "*" = (x * y):ys  
-    fn (y:x:ys) "+" = (x + y):ys  
-    fn (y:x:ys) "-" = (x - y):ys  
-    fn (y:x:ys) "/" = (x / y):ys  
-    fn (y:x:ys) "^" = (x ** y):ys
-    fn (y:x:ys) ".." = reverse [x..y] ++ ys
-
+    fn xs "e" = exp 1:xs  
+    fn xs "pi" = pi:xs
+    
     fn (x:xs) "!" = product [1..x]:xs
     fn (x:xs) "abs" = abs x:xs  
     fn (x:xs) "neg" = negate x:xs  
@@ -18,8 +14,12 @@ solveRPN = foldl fn [] . words
     fn (x:xs) "sin" = sin x:xs  
     fn (x:xs) "tan" = tan x:xs  
 
-    fn xs "e" = exp 1:xs  
-    fn xs "pi" = pi:xs
+    fn (y:x:ys) "*" = (x * y):ys  
+    fn (y:x:ys) "+" = (x + y):ys  
+    fn (y:x:ys) "-" = (x - y):ys  
+    fn (y:x:ys) "/" = (x / y):ys  
+    fn (y:x:ys) "^" = (x ** y):ys
+    fn (y:x:ys) ".." = reverse [x..y] ++ ys
     
     fn xs "avg" = [sum xs / fromIntegral (length xs)]
     fn xs "cnt" = [fromIntegral (length xs)]
@@ -27,7 +27,7 @@ solveRPN = foldl fn [] . words
     fn xs "min" = [minimum xs]
     fn xs "prd" = [product xs]
     fn xs "sum" = [sum xs]
-    
+
     fn xs numberString = read numberString:xs
 
 test :: String -> IO ()
